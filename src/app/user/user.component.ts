@@ -27,11 +27,15 @@ export class UserComponent implements OnInit {
         }
 
         this.title.setTitle(user.username)
-        this.meta.addTags([
-          { property: 'description', content: user.name },
-          { property: 'og:description', content: user.name },
+        this.meta.updateTag(
+          { property: 'descripton', content: user.name },
+        );
+        this.meta.updateTag(
+          { property: 'og:description', content: user.name }
+        );
+        this.meta.updateTag(
           { property: 'og:title', content: user.name }
-        ])
+        )
       }
     })
   }

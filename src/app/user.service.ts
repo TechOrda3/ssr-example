@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {makeStateKey, TransferState} from '@angular/platform-browser';
-import {tap} from 'rxjs';
+import {of, tap} from 'rxjs';
 
 const STATE_KEY_ITEMS = makeStateKey('users');
 
@@ -11,18 +11,15 @@ const STATE_KEY_ITEMS = makeStateKey('users');
 export class UserService {
   private http = inject(HttpClient);
   private state = inject(TransferState);
-  loaded = false;
 
   getUsers() {
-    if (!this.loaded) {
-      console.log('inside')
-      return this.http.get<any>('https://jsonplaceholder.typicode.com/users').pipe(
-        tap(users => this.state.set(STATE_KEY_ITEMS, users))
-      )
-    } else {
-      this.loaded = true;
-      return;
+    if (this.state.hasKey(STATE_KEY_ITEMS)) {
+      return of(this.state.get(STATE_KEY_ITEMS, null));
     }
+    return this.http.get<any>('https://jsonplaceholder.typicode.com/users')
+      .pipe(
+        tap(data => this.state.set(STATE_KEY_ITEMS, data))
+      );
   }
 
   getUser(userId: string) {
