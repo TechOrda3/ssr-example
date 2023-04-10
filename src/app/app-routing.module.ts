@@ -17,7 +17,11 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'users',
+    loadComponent: () => import('./main/main.component').then(c => c.MainComponent)
+  },
+  {
+    path: '',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];
